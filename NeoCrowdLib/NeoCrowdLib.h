@@ -10,7 +10,6 @@
 
 
 using namespace std;
-using namespace cv;
 
 class NEOCROWDLIB_EXPORT NeoCrowdLib : public QObject
 {
@@ -26,13 +25,11 @@ private:
     unique_ptr<BaseTracker> tracker;
     DetectorType detectorType = DetectorType::Vibe;
     TrackerType trackerType = TrackerType::Centroid;
-    VideoCapture cap;
-    unique_ptr<VideoWriter> m_videoWriter;
-    Mat src_image;
-    QTimer *timer = nullptr;
-    QImage *image = nullptr;
-    string m_inputPath;
-    string m_outputPath;
+    cv::VideoCapture cap;
+    unique_ptr<cv::VideoWriter> m_videoWriter;
+    cv::Mat src_image;
+    std::string m_inputPath;
+    std::string m_outputPath;
 
 private:
     bool useReid = false;

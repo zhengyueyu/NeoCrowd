@@ -1,6 +1,5 @@
 #include "NeoCrowdLib.h"
 #include <regex>
-#include <qpixmap.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdio.h>
@@ -19,6 +18,7 @@ void RunRecongizeService(string inputPath, string areaString, string outputPath)
     }
     unique_ptr<NeoCrowdLib> ncl = make_unique<NeoCrowdLib>();
     ncl->ParseMedia(inputPath, areaString, outputPath);
+    cout << "finish"<<endl;
 }
 
 
@@ -26,10 +26,6 @@ NeoCrowdLib::NeoCrowdLib()
 {
     detector = CreateDetector(detectorType);
     tracker = CreateTracker(trackerType);
-    timer = new QTimer(this);
-    image = new QImage();
-
-    connect(timer,SIGNAL(timeout()),this,SLOT(dealFrame()));
 }
 
 
@@ -42,6 +38,8 @@ void NeoCrowdLib::ParseMedia(string inputPath, string areaString, string outputP
 {
     m_inputPath = inputPath;
     m_outputPath = outputPath;
+    cout << "Input path :" + inputPath << endl;
+    cout << "outputPath :" + outputPath << endl;
 
     cap.open(inputPath);
     if(!cap.isOpened())
@@ -55,25 +53,26 @@ void NeoCrowdLib::ParseMedia(string inputPath, string areaString, string outputP
     tracker->SetArea(get_contours(areaString));
     tracker->Init(src_image, std::move(detector));
 
-    Size size = Size(cap.get(CV_CAP_PROP_FRAME_WIDTH), cap.get(CV_CAP_PROP_FRAME_HEIGHT));
-    m_videoWriter = make_unique<VideoWriter>(m_outputPath, CV_FOURCC('M', 'J', 'P', 'G'), cap.get(CV_CAP_PROP_FPS), size, true);
+    int ex = static_cast<int>(cap.get(CV_CAP_PROP_FOURCC));
+    char EXT[] = {(char)(ex & 0XFF) , (char)((ex & 0XFF00) >> 8),(char)((ex & 0XFF0000) >> 16),(char)((ex & 0XFF000000) >> 24), 0};
+    cout << "Input codec type: " << EXT << endl;
 
-    timer->start(33);
+    cv::Size size = cv::Size(384, 288);
+    m_videoWriter = make_unique<cv::VideoWriter>(m_outputPath, ex, cap.get(CV_CAP_PROP_FPS), size, true);
+
+    DealFrame();
 }
 
 
 void NeoCrowdLib::DealFrame()
 {
-    bool success = cap.read(src_image);
-    if(!success)
+    while(cap.read(src_image))
     {
-        cap.release();
-        timer->stop();
-        return;
+        Result result = tracker->Update(&src_image);
+        m_videoWriter->write(result.image);
     }
-
-    Result result = tracker->Update(&src_image);
-    m_videoWriter->write(result.image);
+    cap.release();
+    m_videoWriter->release();
 }
 
 

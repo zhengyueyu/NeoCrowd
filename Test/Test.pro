@@ -1,6 +1,8 @@
-QT -= gui
+QT += core gui
 
-CONFIG += c++11 console
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
+CONFIG += c++14 console
 CONFIG -= app_bundle
 
 # The following define makes your compiler emit warnings if you use
@@ -17,7 +19,22 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp
 
+LIBS    += \
+        /usr/local/lib/libopencv* \
+        -L/home/yy/NeoCrowd/Libs/ -lNeoCrowdLib
+
+INCLUDEPATH += \
+        /usr/local/include \
+        /home/yy/NeoCrowd/NeoCrowdLib
+
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+SUBDIRS += \
+    NeoCrowdLib.pro
+
+
+
+
