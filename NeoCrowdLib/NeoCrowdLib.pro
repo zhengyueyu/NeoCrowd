@@ -28,6 +28,7 @@ SOURCES += \
     Tracker/CentroidTracker.cpp
 
 HEADERS += \
+    Common/Config.h \
     Common/MatToQImage.h \
     Common/result_struct.h \
     Detector/BackgroundSubtract.h \
