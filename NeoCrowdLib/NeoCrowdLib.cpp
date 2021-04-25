@@ -5,11 +5,16 @@
 #include <stdio.h>
 
 
+<<<<<<< HEAD
 void RunRecongizeService(const char* _inputPath, const char* _areaString, const char* _outputPath)
 {
     string inputPath(_inputPath);
     string outputPath(_outputPath);
     string areaString(_areaString);
+=======
+void RunRecongizeService(string inputPath, string areaString, string outputPath)
+{
+>>>>>>> 2be7d893eb13448d40f205dacfd9a1ccfe202694
     if(access(inputPath.data(), F_OK) != 0)
     {
         cout << inputPath + " File Not Exist!" << endl;

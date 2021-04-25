@@ -1,0 +1,182 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>NeoTest DEMO</title>
+    <style>
+        video,
+        canvas {
+            border: 1px solid black;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            height: 40px;
+            border: none;
+            border-radius: 5px;
+            box-shadow: inset 0 0 20px #000;
+            font-size: 20px;
+            background-color: #212121;
+            color: #fff;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            color: #e60023;
+            background-color: #333;
+        }
+    </style>
+</head>
+
+<body>
+    <!--
+		Ideally these elements aren't created until it's confirmed that the
+		client supports video/camera, but for the sake of illustrating the
+		elements involved, they are created with markup (not JavaScript)
+    -->
+    <div style="width: 40%; float: left;">
+        <h3>摄像头画面</h3>
+        <video id="video" width="640" height="480" autoplay=""></video>
+    </div>
+    <div style="width: 40%; float: left;">
+        <h3>图片处理显示区</h3>
+        <canvas id="canvas" width="640" height="480"></canvas>
+    </div>
+    <div style="width: 20%; float: left;">
+        <h3>操作</h3>
+        <button id="snap">从摄像头拍照</button>
+        <br>
+        <button disabled id="analyze" onclick="analyze()">分析图片</button>
+        <br>
+        <input type="file" name="Upload Image" accept="image/gif, image/jpeg, image/png" onchange="readPic(this)">
+        <p id="result"></p>
+    </div>
+
+    <script>
+        var CurImage;
+        // Put event listeners into place
+        function drawImageScaled(img, ctx, infos) {
+            var canvas = ctx.canvas;
+            var hRatio = canvas.width / img.width;
+            var vRatio = canvas.height / img.height;
+            var ratio = Math.min(hRatio, vRatio);
+            var centerShift_x = (canvas.width - img.width * ratio) / 2;
+            var centerShift_y = (canvas.height - img.height * ratio) / 2;
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0, img.width, img.height,
+                centerShift_x, centerShift_y, img.width * ratio, img.height * ratio);
+
+            if (infos) {
+                infos.forEach(function (info) {
+                    //console.log(rect);
+                    const rect_width = info.location.xRightTop - info.location.xLeftBottom;
+                    const rect_height = info.location.yRightTop - info.location.yLeftBottom;
+                    const centerShift_rectx = centerShift_x + info.location.xLeftBottom * ratio;
+                    const centerShift_recty = centerShift_y + info.location.yLeftBottom * ratio;
+                    //console.log(centerShift_x, centerShift_rectx, centerShift_y, centerShift_recty);
+                    ctx.beginPath();
+                    ctx.lineWidth = "2";
+                    ctx.strokeStyle = "green";
+                    ctx.rect(centerShift_rectx, centerShift_recty, rect_width * ratio, rect_height * ratio);
+                    ctx.stroke();
+
+                    ctx.font = "12px serif";
+                    ctx.fillStyle = "green";
+                    ctx.fillText(String(info.id) + ': ' + String(info.confidence.toFixed(3)), centerShift_rectx + 5, centerShift_recty + 10);
+                });
+            }
+        }
+
+
+        window.addEventListener("DOMContentLoaded", function () {
+            // Grab elements, create settings, etc.
+            var canvas = document.getElementById('canvas');
+            var context = canvas.getContext('2d');
+            var video = document.getElementById('video');
+            var mediaConfig = { video: true };
+            var errBack = function (e) {
+                console.log('An error has occurred!', e)
+            };
+
+            // Put video listeners into place
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia(mediaConfig).then(function (stream) {
+                    //video.src = window.URL.createObjectURL(stream);
+                    video.srcObject = stream;
+                    video.play();
+                });
+            }
+
+            /* Legacy code below! */
+            else if (navigator.getUserMedia) { // Standard
+                navigator.getUserMedia(mediaConfig, function (stream) {
+                    video.src = stream;
+                    video.play();
+                }, errBack);
+            } else if (navigator.webkitGetUserMedia) { // WebKit-prefixed
+                navigator.webkitGetUserMedia(mediaConfig, function (stream) {
+                    video.src = window.webkitURL.createObjectURL(stream);
+                    video.play();
+                }, errBack);
+            } else if (navigator.mozGetUserMedia) { // Mozilla-prefixed
+                navigator.mozGetUserMedia(mediaConfig, function (stream) {
+                    video.src = window.URL.createObjectURL(stream);
+                    video.play();
+                }, errBack);
+            }
+
+            // Trigger photo take
+            document.getElementById('snap').addEventListener('click', function () {
+                context.drawImage(video, 0, 0, 640, 480);
+                document.getElementById('analyze').disabled = false;
+                document.getElementById('result').textContent = "";
+            });
+            window.readPic = function (input) {
+                if (input.files && input.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const img = new Image;
+                        img.onload = function () {
+                            //context.clearRect(0, 0, canvas.width, canvas.height);
+                            drawImageScaled(img, context);
+                            //alert('the image is drawn');
+                            document.getElementById('analyze').disabled = false;
+                            document.getElementById('result').textContent = "";
+                        }
+                        img.src = e.target.result;
+                        CurImage = e.target.result;
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+            window.analyze = function () {
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", '/', true);
+
+                //发送合适的请求头信息
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+                xhr.onload = function () {
+                    // 请求结束后,在此处写处理代码 
+                    const obj = JSON.parse(xhr.responseText);
+                    //console.log(obj);
+                    const img = new Image;
+                    img.src = obj.image;
+                    img.onload = function () {
+                        //context.clearRect(0, 0, canvas.width, canvas.height);
+                        drawImageScaled(img, context);
+                        document.getElementById('analyze').disabled = true;
+                        document.getElementById('result').textContent = "识别出的图中人数为： " + obj.person_num;
+                        //alert('the image is drawn');
+                    }
+                };
+                xhr.send("image=" + encodeURIComponent(CurImage));
+            }
+        }, false);
+    </script>
+</body>
+
+</html>

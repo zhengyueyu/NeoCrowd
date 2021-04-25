@@ -45,7 +45,11 @@ private:
 extern "C" {
 #endif
 
+<<<<<<< HEAD
     NEOCROWDLIB_EXPORT void RunRecongizeService(const char* _inputPath, const char* _areaString, const char* _outputPath);
+=======
+    NEOCROWDLIB_EXPORT void RunRecongizeService(string inputPath, string areaString, string outputPath);
+>>>>>>> 2be7d893eb13448d40f205dacfd9a1ccfe202694
 
 #ifdef __cplusplus
 }
