@@ -1,5 +1,5 @@
 # NeoCrowd
-一个用来统计视频监控下的人流量的Demo
+一个用来统计视频监控下的人流量的Demo，使用YOLO或SSD或Vibe的方法进行识别人体，再用OpenCV Contrib的Tracking模块的MIL追踪器进行跟踪，并执行Reid。
 
 ### 运行环境
 *OpenCV 3.4.7*
@@ -9,6 +9,8 @@
 *QT 5.14.2*
 
 *Python 3.7*
+
+*Ubuntu 18.04*
 
 ### 目录说明
 1. NeoCrowdLib 可以编译成so库的project
