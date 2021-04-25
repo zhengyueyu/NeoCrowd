@@ -1,9 +1,10 @@
-QT += gui
-
+QT += core gui
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TEMPLATE = lib
 DEFINES += NEOCROWDLIB_LIBRARY
 
 CONFIG += c++14
+DESTDIR = ../../../Libs
 
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
@@ -28,6 +29,7 @@ SOURCES += \
     Tracker/CentroidTracker.cpp
 
 HEADERS += \
+    Common/Config.h \
     Common/MatToQImage.h \
     Common/result_struct.h \
     Detector/BackgroundSubtract.h \
@@ -39,6 +41,13 @@ HEADERS += \
     NeoCrowdLib.h \
     Tracker/BaseTracker.h \
     Tracker/CentroidTracker.h
+
+LIBS += /usr/local/lib/libopencv*
+
+
+INCLUDEPATH += \
+        /usr/local/include
+
 
 # Default rules for deployment.
 unix {

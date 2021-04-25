@@ -13,8 +13,6 @@
 using namespace std;
 using namespace cv;
 
-
-
 typedef struct
 {
     int disapperTime = 0;    //消失的帧数
@@ -51,7 +49,6 @@ private:
 
     int in = 0;
     int out = 0;
-
 
     unsigned long frame_num = 0;
 

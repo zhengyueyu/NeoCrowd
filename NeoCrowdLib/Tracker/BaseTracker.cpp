@@ -9,13 +9,13 @@ BaseTracker::BaseTracker(QObject *parent) : QObject(parent)
 
 #include "Tracker/CentroidTracker.h"
 
-BaseTracker* CreateTracker(TrackerType tt)
+unique_ptr<BaseTracker> CreateTracker(TrackerType tt)
 {
-    BaseTracker* tracker;
+    unique_ptr<BaseTracker> tracker;
     switch(tt)
     {
     case TrackerType::Centroid:
-        tracker = new CentroidTracker();
+        tracker = make_unique<CentroidTracker>();
         break;
     }
     return tracker;

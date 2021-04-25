@@ -86,8 +86,7 @@ Result CentroidTracker::Update(Mat* img)
     Mat draw_img = src_img;
     int num = 0;
     Result result;
-    in = 0;
-    out = 0;
+
     for (auto tracker = multitracker.begin(); tracker != multitracker.end();)
     {
         num++;
@@ -148,7 +147,7 @@ Result CentroidTracker::Update(Mat* img)
         //画矩形
         rectangle(draw_img, tracker->newestRect, Scalar(0, 225, 0), 2, 0);
         string label = format("id:%d (%.2f, %.2f)", tracker->id, tracker->newestRect.x, tracker->newestRect.y);
-        putText(draw_img, label, Point(tracker->newestRect.x, tracker->newestRect.y - 4), FONT_HERSHEY_PLAIN, 1, Scalar(0, 255, 0), 1.5);
+        //putText(draw_img, label, Point(tracker->newestRect.x, tracker->newestRect.y - 4), FONT_HERSHEY_PLAIN, 1, Scalar(0, 255, 0), 1.5);
 
         //置换新状态
         tracker->oldCentroid = newCentroid;

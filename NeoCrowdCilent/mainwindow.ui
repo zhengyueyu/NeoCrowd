@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>735</width>
+    <height>554</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>PeopleRecognition</string>
+  </property>
+  <property name="toolTipDuration">
+   <number>-1</number>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QLabel" name="CameraView">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>30</y>
+      <width>491</width>
+      <height>441</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="PeopleLabel">
+    <property name="geometry">
+     <rect>
+      <x>540</x>
+      <y>30</y>
+      <width>131</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>number：</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="in_out_label">
+    <property name="geometry">
+     <rect>
+      <x>540</x>
+      <y>70</y>
+      <width>131</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;in:&lt;/p&gt;&lt;p&gt;out:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>540</x>
+      <y>130</y>
+      <width>67</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>area：</string>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="areaEdit">
+    <property name="geometry">
+     <rect>
+      <x>540</x>
+      <y>160</y>
+      <width>161</width>
+      <height>61</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="CameraView2">
+    <property name="geometry">
+     <rect>
+      <x>550</x>
+      <y>350</y>
+      <width>161</width>
+      <height>131</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>735</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>摄像头</string>
+    </property>
+    <addaction name="open"/>
+    <addaction name="close"/>
+   </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>文件</string>
+    </property>
+    <addaction name="select"/>
+   </widget>
+   <widget class="QMenu" name="menu_3">
+    <property name="title">
+     <string>选项</string>
+    </property>
+    <widget class="QMenu" name="menuDetector_Type">
+     <property name="title">
+      <string>Detector Type</string>
+     </property>
+     <addaction name="actionSSDMobileNet"/>
+     <addaction name="actionYolov3"/>
+     <addaction name="actionVbe"/>
+    </widget>
+    <widget class="QMenu" name="menuTracker_Type">
+     <property name="title">
+      <string>Tracker Type</string>
+     </property>
+     <addaction name="actionCentroid_Tracker"/>
+    </widget>
+    <addaction name="menuDetector_Type"/>
+    <addaction name="menuTracker_Type"/>
+    <addaction name="separator"/>
+    <addaction name="actionReid"/>
+   </widget>
+   <addaction name="menu"/>
+   <addaction name="menu_2"/>
+   <addaction name="menu_3"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="open">
+   <property name="text">
+    <string>打开</string>
+   </property>
+  </action>
+  <action name="close">
+   <property name="text">
+    <string>关闭</string>
+   </property>
+  </action>
+  <action name="select">
+   <property name="text">
+    <string>选择文件</string>
+   </property>
+  </action>
+  <action name="actionSSDMobileNet">
+   <property name="text">
+    <string>SSDMobileNet</string>
+   </property>
+  </action>
+  <action name="actionYolov3">
+   <property name="text">
+    <string>Yolov3</string>
+   </property>
+  </action>
+  <action name="actionVbe">
+   <property name="text">
+    <string>Vibe</string>
+   </property>
+  </action>
+  <action name="actionCentroid_Tracker">
+   <property name="text">
+    <string>Centroid Tracker</string>
+   </property>
+  </action>
+  <action name="actionReid">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Reid</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -29,6 +29,6 @@ protected:
     std::vector<std::vector<cv::Point>> m_area;
 };
 
-BaseTracker* CreateTracker(TrackerType);
+std::unique_ptr<BaseTracker> CreateTracker(TrackerType);
 
 #endif // BASETRACKER_H
