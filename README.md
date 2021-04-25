@@ -13,5 +13,5 @@
 ### 目录说明
 1. NeoCrowdLib 可以编译成so库的project
 2. NeoCrowdClient 可以编译成桌面应用的project
-3. Reid_Demo 行人Re-Identification的模块（Python代码）
+3. Reid_Demo 行人Re-Identification的模块（Python代码，其中部分开源代码来源不可考）
 4. TestVideo 来自 ```https://groups.inf.ed.ac.uk/vision/CAVIAR/CAVIARDATA1/``` 的测试视频
