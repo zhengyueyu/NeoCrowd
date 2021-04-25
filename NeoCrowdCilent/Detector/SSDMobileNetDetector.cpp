@@ -7,8 +7,8 @@ SSDMobileNetDetector::SSDMobileNetDetector() : BaseDetector()
 
 void SSDMobileNetDetector::Init(cv::Mat &firstFrame)
 {
-    const String modelTxt = "../../model/deploy.prototxt";
-    const String modelBin = "../../model/mobilenet_iter_73000.caffemodel";
+    const String modelTxt = "../../model/MobileNetSSD/MobileNetSSD_deploy.prototxt.txt";
+    const String modelBin = "../../model/MobileNetSSD/MobileNetSSD_deploy.caffemodel";
 
     net = dnn::readNetFromCaffe(modelTxt, modelBin);
     if (net.empty())

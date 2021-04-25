@@ -7,8 +7,8 @@ YoloDetector::YoloDetector()
 
 void YoloDetector::Init(cv::Mat &firstFrame)
 {
-    const string modelpath = "../../model/yolov3.weights";
-    const string cfgpath = "../../model/yolov3.cfg";
+    const string modelpath = "../../model/yolov3/yolov3.weights";
+    const string cfgpath = "../../model/yolov3/yolov3.cfg";
     net = cv::dnn::readNet(modelpath, cfgpath);
 }
 
@@ -18,6 +18,8 @@ std::vector<Rect> YoloDetector::Update(cv::Mat* frame)
     resize(*frame, img, cv::Size(m_dim, m_dim));
     cv::Mat blob = cv::dnn::blobFromImage(img, 1.0, cv::Size(m_dim, m_dim), cv::Scalar(), true, false, CV_8U);
     net.setInput(blob, "", scalefactor, cv::Scalar());
+
+
     cv::Mat imInfo = (cv::Mat_<float>(1, 3) << m_dim, m_dim, 1.6f);
     net.setInput(imInfo, "im_info");
 
