@@ -56,19 +56,6 @@
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;in:&lt;/p&gt;&lt;p&gt;out:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>540</x>
-      <y>130</y>
-      <width>67</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>area：</string>
-    </property>
-   </widget>
    <widget class="QTextEdit" name="areaEdit">
     <property name="geometry">
      <rect>
@@ -102,13 +89,6 @@
      <height>28</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menu">
-    <property name="title">
-     <string>摄像头</string>
-    </property>
-    <addaction name="open"/>
-    <addaction name="close"/>
-   </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
      <string>文件</string>
@@ -124,7 +104,6 @@
       <string>Detector Type</string>
      </property>
      <addaction name="actionSSDMobileNet"/>
-     <addaction name="actionYolov3"/>
      <addaction name="actionVbe"/>
     </widget>
     <widget class="QMenu" name="menuTracker_Type">
@@ -138,7 +117,6 @@
     <addaction name="separator"/>
     <addaction name="actionReid"/>
    </widget>
-   <addaction name="menu"/>
    <addaction name="menu_2"/>
    <addaction name="menu_3"/>
   </widget>

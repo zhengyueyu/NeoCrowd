@@ -1,4 +1,4 @@
-#define TIMES_OF_REDETECT 5
+#define TIMES_OF_REDETECT 7
 #include "CentroidTracker.h"
 
 CentroidTracker::CentroidTracker() : BaseTracker()
@@ -22,7 +22,7 @@ void CentroidTracker::Init(cv::Mat frame, unique_ptr<BaseDetector> detector, Net
 
 void CentroidTracker::Add(Mat img, Rect box)
 {
-    Ptr<Tracker> t = TrackerMIL::create();
+    Ptr<Tracker> t = TrackerKCF::create();
     t->init(img, box);
     SingleTracker st;
     st.tracker = t;
@@ -87,8 +87,6 @@ Result CentroidTracker::Update(Mat* img)
     Mat draw_img = src_img;
     int num = 0;
     Result result;
-    in = 0;
-    out = 0;
     for (auto tracker = multitracker.begin(); tracker != multitracker.end();)
     {
         num++;
@@ -132,18 +130,23 @@ Result CentroidTracker::Update(Mat* img)
             }
         }
 
-        //计算进出人数
-        if (tracker->oldCentroid.x != -1 && tracker->oldCentroid.y != -1)
+        if(pointPolygonTest(m_area[0], newCentroid, false) > 0)
         {
-            if (pointPolygonTest(m_area[0], tracker->oldCentroid, true) > 0 && pointPolygonTest(m_area[0], newCentroid, true) <= 0)
-            {
-                ++out;
-            }
-            else if (pointPolygonTest(m_area[0], tracker->oldCentroid, true) < 0 && pointPolygonTest(m_area[0], newCentroid, true) >= 0)
-            {
-                ++in;
-            }
+            tracker->isInArea = true;
         }
+
+//        //计算进出人数
+//        if (tracker->oldCentroid.x != -1 && tracker->oldCentroid.y != -1)
+//        {
+//            if (pointPolygonTest(m_area[0], tracker->oldCentroid, true) > 0 && pointPolygonTest(m_area[0], newCentroid, true) <= 0)
+//            {
+//                ++out;
+//            }
+//            else if (pointPolygonTest(m_area[0], tracker->oldCentroid, true) < 0 && pointPolygonTest(m_area[0], newCentroid, true) >= 0)
+//            {
+//                ++in;
+//            }
+//        }
 
 
         //reid
@@ -159,8 +162,8 @@ Result CentroidTracker::Update(Mat* img)
 
         //画矩形
         rectangle(draw_img, tracker->newestRect, Scalar(0, 225, 0), 2, 0);
-        string label = format("id:%d (%.2f, %.2f)", tracker->id, tracker->newestRect.x, tracker->newestRect.y);
-        putText(draw_img, label, Point(tracker->newestRect.x, tracker->newestRect.y - 4), FONT_HERSHEY_PLAIN, 1, Scalar(0, 255, 0), 1.5);
+        string label = format("pos:(%.2f, %.2f)", tracker->newestRect.x, tracker->newestRect.y);
+        putText(draw_img, label, Point(tracker->newestRect.x, tracker->newestRect.y - 4), FONT_HERSHEY_PLAIN, 1, Scalar(0, 255, 0), 1);
 
         //置换新状态
         tracker->oldCentroid = newCentroid;
@@ -185,8 +188,12 @@ bool CentroidTracker::UpdateID(int stamp, int m_id)
 Result CentroidTracker::GetResult(Mat draw_img)
 {
     Result result;
+
+    unsigned oldInAreaNum = inAreaNum;
+    inAreaNum = 0;
     for(vector<SingleTracker>::iterator it = multitracker.begin(); it != multitracker.end(); it++)
     {
+        it->isInArea ? inAreaNum++ : inAreaNum;
         Person_Info pi;
         pi.id = it->id;
         pi.left = it->newestRect.x;
@@ -197,12 +204,22 @@ Result CentroidTracker::GetResult(Mat draw_img)
     }
 
     result.image = draw_img;
-    if (m_area.size() > 0) {
+    if (m_area.size() > 0)
+    {
         cv::drawContours(result.image, m_area, 0, cv::Scalar(255, 255, 0), 2, cv::LINE_AA);
     }
-    result.person_num = multitracker.size();
+
+    if(oldInAreaNum > inAreaNum)
+    {
+        out += oldInAreaNum - inAreaNum;
+    }
+    else if (oldInAreaNum < inAreaNum)
+    {
+        in += inAreaNum - oldInAreaNum;
+    }
     result.person_count.in = in;
     result.person_count.out = out;
+    result.person_num = inAreaNum;
     return result;
 }
 

@@ -30,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     timer = new QTimer(this);
     image = new QImage();
-    ui->areaEdit->setPlainText(QString("300,150,450,150,450,50,300,50"));
+    ui->areaEdit->setPlainText(QString("200,200,200,50,300,50,300,200"));
     connect(timer,SIGNAL(timeout()),this,SLOT(dealFrame()));
     connect(ui->open,SIGNAL(clicked()),this,SLOT(on_open_triggered()));
     connect(ui->close,SIGNAL(clicked()),this,SLOT(on_Stop_triggered()));
@@ -64,7 +64,7 @@ void MainWindow::on_open_triggered()
     cap.open(0);
     cap.read(src_image);
     Init();
-    timer->start(1);
+    timer->start(33);
 }
 
 void MainWindow::on_close_triggered()

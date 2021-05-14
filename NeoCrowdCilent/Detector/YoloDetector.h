@@ -18,6 +18,6 @@ private:
     const int m_dim = 608;
     const float scalefactor = 1.0f;
     const int person_idx = 0;
-    const float confidenceThreshold = 0.6;
+    const float confidenceThreshold = 0.3;
 };
 #endif // YOLODETECTOR_H

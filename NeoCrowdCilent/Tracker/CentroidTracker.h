@@ -24,6 +24,7 @@ typedef struct
     Ptr<Tracker> tracker;
     unsigned int id;
     bool isReid = false;
+    bool isInArea = false;
 }SingleTracker;
 
 class CentroidTracker : public BaseTracker
@@ -41,12 +42,8 @@ public:
     void AddExcludeExist(Mat img, Rect boxes);
     void AddExcludeExist(Mat img, vector<Rect> boxes);
 
-
-
 public slots:
     bool UpdateID(int stamp, int id);
-
-
 
 private:
     const int maxDistance = 25;
@@ -54,7 +51,7 @@ private:
 
     int in = 0;
     int out = 0;
-
+    unsigned inAreaNum = 0;
 
     unsigned long frame_num = 0;
 

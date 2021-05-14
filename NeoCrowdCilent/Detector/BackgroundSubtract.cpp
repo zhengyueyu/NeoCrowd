@@ -14,8 +14,7 @@ void BackgroundSubtract::Init(cv::Mat &firstFrame)
     cvtColor(firstFrame, img, CV_BGR2GRAY);
 
     int channel = 1;
-    std::vector<int> params = { 20, 1, 20, 3, 16 };
-    model = vibe::VIBE(channel, params[0], params[1], params[2], params[3], params[4]);
+    model = vibe::VIBE(channel);
     model.init(img);
 }
 
